@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heads Up Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- HOME SCREEN -->
+    <section id="home-screen" class="screen active">
+      <h1>Heads Up!</h1>
+      <p class="subtitle">Pick a category, place the phone on your forehead, and let your friends give clues.</p>
+
+      <div class="category-grid" id="category-grid"></div>
+    </section>
+
+    <!-- READY SCREEN -->
+    <section id="ready-screen" class="screen">
+      <h2 id="selected-category-title">Category</h2>
+      <p class="instructions">
+        Place your phone on your forehead so everyone else can see the word.
+      </p>
+
+      <div class="how-to">
+        <p>Move phone <strong>up</strong> = Correct</p>
+        <p>Move phone <strong>down</strong> = Pass</p>
+      </div>
+
+      <button id="start-btn" class="main-btn">Start Game</button>
+      <button id="back-btn" class="secondary-btn">Back</button>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="game-screen" class="screen game-screen">
+      <div class="top-bar">
+        <span id="timer">60</span>
+      </div>
+
+      <div class="word-card">
+        <h2 id="word-display">Word</h2>
+      </div>
+
+      <div class="manual-controls">
+        <button id="wrong-btn" class="wrong">Pass</button>
+        <button id="correct-btn" class="correct">Correct</button>
+      </div>
+
+      <p class="motion-note">Motion not working? Use the buttons.</p>
+    </section>
+
+    <!-- RESULT SCREEN -->
+    <section id="result-screen" class="screen">
+      <h2>Time’s Up!</h2>
+
+      <div class="score-box">
+        <p>Correct: <span id="correct-count">0</span></p>
+        <p>Passed: <span id="wrong-count">0</span></p>
+      </div>
+
+      <div class="results-list">
+        <h3>Correct Answers</h3>
+        <ul id="correct-list"></ul>
+
+        <h3>Passed Words</h3>
+        <ul id="wrong-list"></ul>
+      </div>
+
+      <button id="play-again-btn" class="main-btn">Play Again</button>
+      <button id="home-btn" class="secondary-btn">Choose Category</button>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
