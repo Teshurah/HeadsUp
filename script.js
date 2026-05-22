@@ -129,13 +129,46 @@ function shuffleWords(words) {
   return [...words].sort(() => Math.random() - 0.5);
 }
 
-function startGame() {
+async function enterLandscapeMode() {
+  try {
+    const app = document.documentElement;
+
+    if (app.requestFullscreen) {
+      await app.requestFullscreen();
+    }
+
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock("landscape");
+    }
+  } catch (error) {
+    console.log("Landscape mode is not supported on this device or browser.");
+  }
+}
+
+async function exitLandscapeMode() {
+  try {
+    if (screen.orientation && screen.orientation.unlock) {
+      screen.orientation.unlock();
+    }
+
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    }
+  } catch (error) {
+    console.log("Could not exit landscape mode.");
+  }
+}
+
+async function startGame() {
+  await enterLandscapeMode();
+
   wordQueue = shuffleWords(categories[selectedCategory].words);
   correctWords = [];
   wrongWords = [];
   timeLeft = 60;
   gameActive = true;
   startingTilt = null;
+  motionReady = true;
 
   showScreen(gameScreen);
   nextWord();
@@ -144,6 +177,7 @@ function startGame() {
 }
 
 function startTimer() {
+  clearInterval(timer);
   timerDisplay.textContent = timeLeft;
 
   timer = setInterval(() => {
@@ -189,9 +223,11 @@ function flashScreen(color) {
   }, 250);
 }
 
-function endGame() {
+async function endGame() {
   clearInterval(timer);
   gameActive = false;
+
+  await exitLandscapeMode();
 
   correctCount.textContent = correctWords.length;
   wrongCount.textContent = wrongWords.length;
@@ -215,17 +251,19 @@ function endGame() {
 }
 
 function enableMotionControls() {
-  if (typeof DeviceOrientationEvent !== "undefined" &&
-      typeof DeviceOrientationEvent.requestPermission === "function") {
-
+  if (
+    typeof DeviceOrientationEvent !== "undefined" &&
+    typeof DeviceOrientationEvent.requestPermission === "function"
+  ) {
     DeviceOrientationEvent.requestPermission()
       .then(permissionState => {
         if (permissionState === "granted") {
           window.addEventListener("deviceorientation", handleOrientation);
         }
       })
-      .catch(console.error);
-
+      .catch(error => {
+        console.log("Motion permission was not granted.", error);
+      });
   } else {
     window.addEventListener("deviceorientation", handleOrientation);
   }
